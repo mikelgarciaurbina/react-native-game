@@ -13,6 +13,13 @@ const initialBox = Matter.Bodies.rectangle(
   boxSize,
   boxSize
 );
+const floor = Matter.Bodies.rectangle(
+  width / 2,
+  height - boxSize / 2,
+  width,
+  boxSize,
+  { isStatic: true }
+);
 
 export default class App extends React.Component {
   render() {
@@ -24,6 +31,12 @@ export default class App extends React.Component {
             body: initialBox,
             size: [boxSize, boxSize],
             color: "red",
+            renderer: Box
+          },
+          floor: {
+            body: floor,
+            size: [width, boxSize],
+            color: "green",
             renderer: Box
           }
         }}
