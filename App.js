@@ -13,6 +13,7 @@ const initialBox = Matter.Bodies.rectangle(
   boxSize,
   boxSize
 );
+
 const floor = Matter.Bodies.rectangle(
   width / 2,
   height - boxSize / 2,
@@ -21,25 +22,41 @@ const floor = Matter.Bodies.rectangle(
   { isStatic: true }
 );
 
+const engine = Matter.Engine.create({ enableSleeping: false });
+const world = engine.world;
+
+Matter.World.add(world, [initialBox, floor]);
+
+const Physics = (entities, { time }) => {
+  let engine = entities["physics"].engine;
+  Matter.Engine.update(engine, time.delta);
+  return entities;
+};
+
 export default class App extends React.Component {
   render() {
     return (
       <GameEngine
-        style={styles.container}
         entities={{
+          floor: {
+            body: floor,
+            size: [width, boxSize],
+            color: "green",
+            renderer: Box
+          },
           initialBox: {
             body: initialBox,
             size: [boxSize, boxSize],
             color: "red",
             renderer: Box
           },
-          floor: {
-            body: floor,
-            size: [width, boxSize],
-            color: "green",
-            renderer: Box
+          physics: {
+            engine: engine,
+            world: world
           }
         }}
+        systems={[Physics]}
+        style={styles.container}
       >
         <StatusBar hidden={true} />
       </GameEngine>
